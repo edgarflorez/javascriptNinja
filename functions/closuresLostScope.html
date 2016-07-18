@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Functions</title>
+	<script src="js/testSuite.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<h1>Closures</h1>
+	<div id="results"></div>
+
+	<p>This is due the fact that closures only remember references to variables, not to the actual values at the time at wich they were called</p>
+
+	<span class="div1">SPAN A</span>
+	<br>
+	<span class="div2">SPAN B</span>
+
+	<p>Using an anonymous function wrapper to persist the iterator property</p>
+
+	<div class="btn">BTN A</div>
+	<br>
+	<div class="btn">BTN B</div>
+
+
+	<script>
+
+	// Loops : Problematic piece of code in wich iterator is not manteined in the closure
+
+	var span = document.getElementsByTagName('span');
+	for (var i = 0; i < span.length; i++) {
+		span[i].addEventListener('click',function(){
+			alert('span # ' + i  + ' was clicked.')
+		})
+	}
+
+	// Listing 3-20 Using an anonymous function wrapper to persist the iterator property
+	var div = document.getElementsByClassName('btn');
+	for (var i = 0; i < div.length; i++) (function(i){
+		div[i].addEventListener('click',function(e){
+			alert('div # ' + i + ' was clicked' );
+		});
+	})(i);
+
+
+
+
+	
+
+	</script>
+	
+</body>
+</html>

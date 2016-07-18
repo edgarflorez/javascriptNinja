@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Functions</title>
+	<script src="js/testSuite.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<h1>Functions</h1>
+	<input id="first"/><input id="second"/>
+	<div id="results"></div>
+
+
+	<script>
+	// Three different ways to define a function.
+	assert(true, '********** Three different ways to define a function.')
+	function isNimble(){ return true; }
+
+	var canFly = function(){ return true; };
+
+	window.isDeadly = function(){ return true; };
+
+	assert( isNimble() && canFly() && isDeadly(),
+		"All are functions, all return true" );
+
+	// Simple function recursion.
+	assert(true, '********** Simple function recursion.')
+	function yell(n){
+		return n > 0 ? yell(n-1) + "a" : "hiy";
+	}
+	assert( yell(4) == "hiyaaaa",
+		"Calling the function by itself comes naturally. :: hiyaaaa" );
+
+
+	// Storing unique functions within a structure.
+	assert(true, '********** Storing unique functions within a structure.')
+	var store = {
+		id: 1,
+		cache: {},
+		add: function( fn ) {
+			if ( !fn.id ) {
+				fn.id = store.id++;
+				return !!(store.cache[fn.id] = fn);
+			}
+		}
+	};
+	function ninja(){}
+	assert( store.add( ninja ), "Function was safely added." );
+	assert( !store.add( ninja ), "But it was only added once." );
+
+	// A prime computation function which memorizes its previously-computed values.
+	assert(true, '********** A prime computation function which memorizes its previously-computed values.')
+	function isPrime( num ) {
+		if ( isPrime.answers[ num ] != null )
+			return isPrime.answers[ num ];
+		var prime = num != 1; // Everything but 1 can be prime
+		for ( var i = 2; i < num; i++ ) {
+			if ( num % i == 0 ) {
+				prime = false;
+				break;
+			}
+		}
+		return isPrime.answers[ num ] = prime;
+	}
+	isPrime.answers = {};
+	assert( isPrime(5), "Make sure the function works, 5 is prime." );
+	assert( isPrime.answers[5], "Make sure the answer is cached." );
+
+	// What context refers to within a function.
+	assert(true, '********** What context refers to within a function.')
+	function katana(){
+		this.isSharp = true;
+	}
+	katana();
+	assert( isSharp === true,
+		"A global object now exists with that name and value." );
+	var shuriken = {
+		toss: function(){
+			this.isSharp = true;
+		}
+	};
+	shuriken.toss();
+	assert( shuriken.isSharp === true,
+		"It's an object property, the value is set within the object." );
+
+	// Modifying the context of a function, when call.
+	assert(true, '**********************************************************')
+	assert(true, '********** Modifying the context of a function, when call.')
+	var object = {};
+	function fn(){
+		return this;
+	}
+	assert( fn() == this, "The context is the global object." );
+	assert( fn.call(object) == object,
+		"The context is changed to a specific object." );
+
+	// Two methods of modifying a function's context.
+	assert(true, '********** Two methods of modifying a function\'s context.')
+	function add(a, b){
+		return a + b;
+	}
+	assert( add.call(this, 1, 2) == 3,
+		".call() takes individual arguments" );
+	assert( add.apply(this, [1, 2]) == 3,
+		".apply() takes an array of arguments" );
+	//Change the context of a function to use the variables of other object
+	var myObj = {
+		var1: "variable obj"
+	}
+	function myFn(){
+		console.log(this.var1);
+		return  this.var1;
+	}
+	assert(typeof myFn.call(myObj) != 'undefined', "call myFn setting the context to myObj")
+	assert(typeof myFn() != 'undefined', "call myFndirectly")
+
+	// Looping with a function callback.
+	assert(true, '********** LOOPING')
+	assert(true, '********** Looping with a function callback.')
+	function loop(array, fn){
+		for ( var i = 0; i < array.length; i++ )
+			if ( fn.call( array, array[i], i ) === false )
+				break;
+	}
+	var num = 0;
+	loop([0, 1, 2], function(value, i){
+		assert(value == num++,
+			"Make sure the contents are as we expect it.");
+	});
+
+	// Simulating array-like methods.
+	assert(true, '********** Fake Array Methods')
+	assert(true, '********** Simulating array-like methods.')
+
+	var elems = {
+		find: function(id){
+			this.add( document.getElementById(id) );
+		},
+		length: 0,
+		add: function(elem){
+			Array.prototype.push.call( this, document.getElementById(elem) );
+		}
+	};
+	elems.add("first");
+	assert( elems.length == 1 && elems[0].nodeType,
+		"Verify that we have an element in our stash" );
+	elems.add("second");
+	assert( elems.length == 2 && elems[1].nodeType,
+		"Verify the other insertion" );
+
+	//A generic min and max function for arrays.
+	assert(true, '********** A generic min and max function for arrays.')
+
+	function smallest(array){
+		return Math.min.apply( Math, array );
+	}
+	function largest(array){
+		return Math.max.apply( Math, array );
+	}
+	assert(smallest([0, 1, 2, 3]) == 0, "Locate the smallest value.");
+	assert(largest([0, 1, 2, 3]) == 3, "Locate the largest value.");
+
+	//Changing function actions based upon the arguments.
+	assert(true, '********** Changing function actions based upon the arguments.')
+	
+	function merge(root){
+		for ( var i = 1; i < arguments.length; i++ )
+			for ( var key in arguments[i] )
+				root[key] = arguments[i][key];
+		return root;
+	}
+	var merged = merge({name: "John"}, {city: "Boston", country: "US"});
+	assert( merged.name == "John", "The original name is intact." );
+	assert( merged.city == "Boston", "And the city has been copied over." );
+
+	// An example of method overloading using the addMethod function from Listing 2-27.
+	assert(true, '********** An example of method overloading using the addMethod function from Listing 2-27.')
+	function Ninjas(){
+		var ninjas = [ "Dean Edwards", "Sam Stephenson", "Alex Russell" ];
+		// addMethod is defined in Listing 2-27
+		addMethod(this, "find", function(){
+			return ninjas;
+		});
+		addMethod(this, "find", function(name){
+			var ret = [];
+			for ( var i = 0; i < ninjas.length; i++ )
+				if ( ninjas[i].indexOf(name) == 0 )
+					ret.push( ninjas[i] );
+			return ret;
+		});
+		addMethod(this, "find", function(first, last){
+			var ret = [];
+			for ( var i = 0; i < ninjas.length; i++ )
+				if ( ninjas[i] == (first + " " + last) )
+					ret.push( ninjas[i] );
+			return ret;
+		});
+	}
+	function addMethod(object, name, fn){
+		var old = object[ name ];
+		object[ name ] = function(){
+			if ( fn.length == arguments.length )
+				return fn.apply( this, arguments )
+			else if ( typeof old == 'function' )
+				return old.apply( this, arguments );
+		};
+	}
+	var ninjas = new Ninjas();
+	assert( ninjas.find().length == 3, "Finds all ninjas" );
+	assert( ninjas.find("Sam").length == 1, "Finds ninjas by first name" );
+	assert( ninjas.find("Dean", "Edwards").length == 1, "Finds ninjas by first and last name" );
+	assert( ninjas.find("Alex", "X", "Russell") == null, "Does nothing" );
+
+	//A few examples of closures.
+	assert(true, '********** A few examples of closures.')
+	
+	var outerValue = true;
+	function outerFn(arg1){
+		var innerValue = true;
+		assert( outerFn && outerValue, "These come from the closure." );
+		assert( typeof otherValue === "undefined",
+			"Variables defined late are not in the closure." );
+		function innerFn(arg2){
+			assert( outerFn && outerValue,
+				"These still come from the closure." );
+			assert( innerFn && innerValue && arg1,
+				"All from a closure, as well." );
+		}
+		innerFn(true);
+	}
+	outerFn(true);
+	var otherValue = true;
+	assert( outerFn && outerValue,
+		"Globally-accessible variables and functions." );
+
+	// An example of keeping a variable private but accessible via a closure.
+	assert(true, '********** An example of keeping a variable private but accessible via a closure.')
+
+	function Ninja(){
+		var slices = 0;
+		this.getSlices = function(){
+			return slices;
+		};
+		this.slice = function(){
+			slices++;
+		};
+	}
+	var ninja = new Ninja();
+	ninja.slice();
+	assert( ninja.getSlices() == 1,
+		"We're able to access the internal slice data." );
+	assert( ninja.slices === undefined,
+		"And the private data is inaccessible to us." );
+	
+
+
+
+	</script>
+	
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Functions</title>
+	<script src="js/testSuite.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<h1>LIBRARY WRAPPING</h1>
+	<div id="results"></div>
+
+	<h2>3.21 placing a variable outside of a function wrapper</h2>
+	<br>
+	<h2>3-22 An alternative means of putting a variable in the outer scope</h2>
+
+	
+	<script>
+
+	// 3.21 placing a variable outside of a function wrapper
+
+	(function(){
+		var jQuery = window.jQuery = function(){
+			//Initialize
+		}
+	})();
+
+
+	// 3-22 An alternative means of putting a variable in the outer scope
+	var jQuery = (function(){
+		function jQuery(){
+			//Initialize
+		}
+		return jQuery;
+	})();
+
+
+	</script>
+	
+</body>
+</html>

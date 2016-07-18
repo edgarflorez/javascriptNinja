@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test Suite</title>
+	<script src="js/testSuite.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<h1>Test Suite</h1>
+	<div id="results"></div>
+
+
+	<script>
+		// test basic functionality
+		assert(true,"This should render true")
+		assert(false,"This should render false")
+
+		//Test async  
+		test(function(){
+			pause();
+			setTimeout(function(){
+				assert( true, "First test completed" );
+				resume();
+			}, 5000);
+		});
+		test(function(){
+			pause();
+			setTimeout(function(){
+				assert( true, "Second test completed" );
+				resume();
+			}, 1000);
+		});
+
+	</script>
+	
+</body>
+</html>
