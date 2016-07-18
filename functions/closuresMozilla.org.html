@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Closures Mozilla.org</title>
+</head>
+<body>
+	<h1>CLOSURES MOZILLA.ORG</h1>
+
+	<p><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Closures">Closures MOZILLA</a></p>
+
+	<ul>
+		<li>A closure is a special kind of object that combines two things: a function, and the environment in which that function was created. The environment consists of any local variables that were in-scope at the time that the closure was created. In this case, myFunc is a closure that incorporates both the displayName function and the "Mozilla" string that existed when the closure was created.</li>
+		<li>In essence, makeAdder is a function factory — it creates functions which can add a specific value to their argument. In the above example we use our function factory to create two new functions — one that adds 5 to its argument, and one that adds 10.
+			<ul>
+				<li>add5 and add10 are both closures. They share the same function body definition, but store different environments. In add5's environment, x is 5. As far as add10 is concerned, x is 10.</li>
+			</ul>
+		</li>
+	</ul>
+	
+	<script>
+
+		//Lexical scoping
+		function init(){
+			var name = "Mozilla";
+			function displayName(){
+				console.log("Lexical scoping ",name );
+			}
+			displayName();
+		}
+		init();
+
+		//Closure
+		function makeFunc() {
+			var name = "Mozilla";
+			function displayName(){
+				console.log("Closure ",name);
+			}
+			return displayName;
+		}
+		var myFunc = makeFunc();
+		myFunc();
+
+		//Closures Function Factory
+		function makeAdder(x) {
+			return function(y){
+				return x + y;
+			}
+		}
+
+		var add5 	= makeAdder(5);
+		var add10	= makeAdder(10);
+
+		console.log(add5(2));	// 7
+		console.log(add10(5));	// 12
+
+	</script>
+</body>
+</html>
