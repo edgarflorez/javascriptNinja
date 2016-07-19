@@ -3,6 +3,20 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Closures Mozilla.org</title>
+	<style>
+		body {
+		  font-family: Helvetica, Arial, sans-serif;
+		  font-size: 12px;
+		}
+
+		.font-header-1 {
+		  font-size: 1.5em;
+		}
+
+		.font-header-2 {
+		  font-size: 1.2em;
+		}
+	</style>
 </head>
 <body>
 	<h1>CLOSURES MOZILLA.ORG</h1>
@@ -17,6 +31,19 @@
 			</ul>
 		</li>
 	</ul>
+
+	<h2>Practical closures</h2>
+	<ul>
+		<li>A closure lets you associate some data (the environment) with a function that operates on that data.</li>
+		<li>Consequently, you can use a closure anywhere that you might normally use an object with only a single method.</li>
+	</ul>
+	<p class="font-header-1">this is font 1</p>
+	<p class="font-header-2">this is the font 2</p>
+	<a href="#" id="size-12">12</a>
+	<a href="#" id="size-16">16</a>
+	<a href="#" id="size-20">20</a>
+
+	<h2>NEXT Emulating private methods with closures</h2>
 	
 	<script>
 
@@ -53,6 +80,22 @@
 
 		console.log(add5(2));	// 7
 		console.log(add10(5));	// 12
+
+		//Functional Closures
+		function makeSizer(size) {
+			return function(){
+				document.body.style.fontSize = size + "px";
+			}
+		}
+
+		var size12 = makeSizer(12);
+		var size16 = makeSizer(16);
+		var size20 = makeSizer(20);
+
+			//bind buttons
+		document.getElementById('size-12').onclick = size12;
+		document.getElementById('size-16').onclick = size16;
+		document.getElementById('size-20').onclick = size20;
 
 	</script>
 </body>
