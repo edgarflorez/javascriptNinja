@@ -44,6 +44,11 @@
 	<a href="#" id="size-20">20</a>
 
 	<h2>NEXT Emulating private methods with closures</h2>
+
+	<h2>Emulating private methods with closures</h2>
+	<ul>
+		<li>Those three public functions are closures that share the same environment. Thanks to JavaScript's lexical scoping, they each have access to the privateCounter variable and changeBy function.</li>
+	</ul>
 	
 	<script>
 
@@ -77,7 +82,9 @@
 
 		var add5 	= makeAdder(5);
 		var add10	= makeAdder(10);
-
+		console.log('*************************');
+		console.log('Closures Function Factory');
+		console.log('*************************');
 		console.log(add5(2));	// 7
 		console.log(add10(5));	// 12
 
@@ -96,6 +103,35 @@
 		document.getElementById('size-12').onclick = size12;
 		document.getElementById('size-16').onclick = size16;
 		document.getElementById('size-20').onclick = size20;
+
+		//Emulating private methods with closures
+		var counter = (function(){
+			var privateCounter = 0;
+			function changeBy(val){
+				privateCounter += val; 
+			}
+			return{
+				increment: function(){
+					changeBy(1);
+				},
+				decrement: function(){
+					changeBy(-1);
+				},
+				value: function(){
+					return privateCounter;
+				}
+			}
+		})();
+		console.log('***************************************');
+		console.log('Emulating private methods with closures');
+		console.log('***************************************');
+		console.log(counter.value()); // logs 0
+		counter.increment();
+		counter.increment();
+		console.log(counter.value()); // logs 2
+		counter.decrement();
+		console.log(counter.value()); // logs 1
+
 
 	</script>
 </body>
