@@ -49,7 +49,19 @@
 	<ul>
 		<li>Those three public functions are closures that share the same environment. Thanks to JavaScript's lexical scoping, they each have access to the privateCounter variable and changeBy function.</li>
 	</ul>
-	
+
+	<h2>Creating closures in loops: A common mistake</h2>
+	<p id="help">Helpful notes will appear here</p>
+	<p>E-mail:<input type="text" id="email" name="email"></p>
+	<p>Name: <input type="text" id="name" name></p>
+	<p>Age: <input type="text" id="age" name="age"></p>
+
+	<h2>Perfomance considerations</h2>
+
+	<ul>
+		<li>It is unwise to unnecessarily create functions within other functions if closures are not needed for a particular task, as it will negatively affect script performance both in terms of processing speed and memory consumption.</li>
+		<li>For instance, when creating a new object/class, methods should normally be associated to the object's prototype rather than defined into the object constructor. The reason is that whenever the constructor is called, the methods would get reassigned (that is, for every object creation).</li>
+	</ul>
 	<script>
 
 		//Lexical scoping
@@ -131,6 +143,188 @@
 		console.log(counter.value()); // logs 2
 		counter.decrement();
 		console.log(counter.value()); // logs 1
+
+
+		// Create several counters
+		var makeCounter = function () {
+			var privateCounter = 0;
+			function changeBy(val) {
+				privateCounter += val;
+			}
+			return{
+				increment: function () {
+					changeBy(1);
+				},
+				decrement: function () {
+					changeBy(-1);
+				},
+				value: function () {
+					return privateCounter;
+				}
+			}
+		}
+		console.log('*****************************************************************');
+		console.log('Create several counters : Emulating private methods with closures');
+		console.log('*****************************************************************');
+		var counter1 = makeCounter();
+		var counter2 = makeCounter();
+		console.log(counter1.value()); // logs 0
+		counter1.increment();
+		counter1.increment();
+		console.log(counter1.value()); // logs 2
+		counter1.decrement();
+		console.log(counter1.value()); // logs 1
+		console.log(counter2.value()); // logs 0
+
+		console.log('********************************************');
+		console.log('Creating closures in loops: A common mistake');
+		console.log('********************************************');
+
+		var help = document.getElementById('help');
+
+		function showHelp(value) {
+			help.innerHTML = value;
+		}
+
+		// JS Ninja Approach
+		/*
+		function setupHelp() {
+			var helpData = [
+				{id: "email", help: "Please insert your email"},
+				{id: "name", help: "Please insert your name"},
+				{id: "age", help: "Please insert your age"}
+			];
+			for (var i = 0; i < helpData.length; i++) (function (i) {
+				var item = helpData[i];
+
+				document.getElementById(item.id).onfocus = function () {
+					showHelp(item.help);
+				}
+			})(i)
+		}
+		*/
+
+		//Mozilla approach . make another closure to return the proper scope to the var i
+		function makeHelpCallback(help) {
+		  return function() {
+		    showHelp(help);
+		  };
+		}
+
+		function setupHelp() {
+			var helpData = [
+				{id: "email", help: "Please insert your email"},
+				{id: "name", help: "Please insert your name"},
+				{id: "age", help: "Please insert your age"}
+			];
+			for (var i = 0; i < helpData.length; i++) {
+				var item = helpData[i];
+
+				document.getElementById(item.id).onfocus = makeHelpCallback(item.help);
+			}
+		}
+
+		/*
+		//old implementation var scope links to state of the var
+
+		function setupHelp() {
+			var helpData = [
+				{id: "email", help: "Please insert your email"},
+				{id: "name", help: "Please insert your name"},
+				{id: "age", help: "Please insert your age"}
+			];
+			for (var i = 0; i < helpData.length; i++) {
+				var item = helpData[i];
+
+				document.getElementById(item.id).onfocus = function () {
+					showHelp(item.help);
+				}
+			}
+		}
+		*/
+		setupHelp();
+
+		console.log('*************************');
+		console.log('Perfomance considerations');
+		console.log('*************************');
+
+		// Step 01
+		/*
+		function MyObject(name, message) {
+		  this.name = name.toString();
+		  this.message = message.toString();
+		  this.getName = function() {
+		    return this.name;
+		  };
+
+		  this.getMessage = function() {
+		    return this.message;
+		  };
+		}
+		*/
+		
+
+		// Step 02 :: The previous code does not take advantage of the benefits of closures and thus could instead be formulated:
+		/*
+		function MyObject(name, message) {
+			this.name = name.toString();
+			this.message = message.toString();
+		}
+		MyObject.prototype = {
+			getName: function () {
+				return this.name;
+			},
+			getMessage: function () {
+				return this.message;
+			}
+		}
+		*/
+
+		// Step 03 :: However, redefining the prototype is not recommended, so the following example is even better because it appends to the existing prototype:
+		/*
+		function MyObject(name, message) {
+			this.name = name.toString();
+			this.message = message.toString();
+		}
+		MyObject.prototype.getName = function () {
+			return this.name;
+		}
+		MyObject.prototype.getMessage = function () {
+			return this.message;
+		}
+		*/
+		// Step 04 :: The above code can also be written in a cleaner way with the same result:
+		
+		function MyObject(name, message) {
+			this.name = name.toString();
+			this.message = message.toString();
+		}
+		(function () {
+			this.getName = function () {
+				return this.name;
+			};
+			this.getMessage = function () {
+				return this.message;
+			}
+		}).call(MyObject.prototype);
+		
+
+
+
+		var elements = [];
+		function objectFactory(numItems) {
+			var elSeed, el;
+			for (var i = 0; i < numItems; i++) {
+				elSeed = "element"+(Math.floor( Math.random()*1000000) );
+				el = new MyObject(elSeed, elSeed+" Message");
+				elements.push(el);
+			}
+		}
+
+		objectFactory(10000);
+		console.log(elements);
+
+
 
 
 	</script>
