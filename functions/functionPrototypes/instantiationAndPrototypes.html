@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test Suite</title>
+	<script src="../js/testSuite.js"></script>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+	<h1>Function Prototypes</h1>
+	<div id="results"></div>
+	<h1>Instantiation</h1>
+	<p>Create constructor - create prototype method - create instance</p>
+	<h1>Instantiation update prototype after instanciation.</h1>
+	<p>Create constructor - create prototype method - create instance</p>
+	<h1>Object Type</h1>
+	<p>validate the instance type, instanceof and constructor</p>
+
+
+
+	<script>
+		// Instantiation
+		assert(true,"*********************************");
+		assert(true,"*********** Instantiation ***********");
+		assert(true,"*********************************");
+		function Ninja(){
+			this.swung = false;
+			function swingSword() {
+				return !this.swung;
+			}
+		}
+		Ninja.prototype.swingSword = function () {
+			return this.swung;
+		}
+
+		var ninja = new Ninja();
+
+		assert( ninja.swingSword , "Calling the instance method, not the prototype method." );
+
+		//Instantiation update prototype after instanciation.
+
+		function Ninja2() {
+			this.swung = false;
+			this.swingSword = function() {
+				return !this.swung;
+			}
+		}
+		Ninja2.prototype.swingSword = function () {
+			return this.swung;
+		}
+		var ninja2 = new Ninja2(); //You can define the prototype even when you have an instance created
+		
+		assert( ninja2.swingSword() , "NINJA2 INSTANCE * Calling the instance method, not the prototype method." );
+
+
+		// Object Type
+		assert(true,"*********************************");
+		assert(true,"*********** Object Type ***********");
+		assert(true,"*********************************");
+
+		assert( typeof ninja == 'object', "However the type of the instance is still and Object");
+		assert( ninja instanceof Ninja, "The object was instantiated propertly");
+		assert( ninja.constructor == Ninja, "The Ninja Object was created by the Ninja function");
+		var ninja3 = new ninja.constructor();
+		assert( ninja3 instanceof Ninja, "Still a Ninja Object");
+
+
+	</script>
+	
+</body>
+</html>

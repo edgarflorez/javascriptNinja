@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test Suite</title>
+	<script src="js/testSuite.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<h1>CLOSURES TEMPORARY SCOPE AND PRIVATE VARIABLES</h1>
+	<div id="results"></div>
+	<p>Click on the page to incremente the 'numClicks' variable</p>
+
+
+	<script>
+		//Listing 3-16: Creating a temporary enclosure for persisting a variable.
+		/*
+		(function () {
+			var numClicks = 0;
+			document.addEventListener('click',function () {
+				alert(++numClicks);
+			}, false);
+		})()
+		*/
+
+		//Listing 3-17: An alternative to the example in Listing 3-16, returning a value from the enclosure.
+		document.addEventListener('click', (function () {
+			var numClicks = 0;
+			return function () {
+				alert(++numClicks);
+			}
+		})(),false)
+
+	</script>
+	
+</body>
+</html>
