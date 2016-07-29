@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Inheritance and the prototype chain</title>
+	<script src="../js/testSuite.js"></script>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+	<h1>Inheritance and the prototype chain</h1>
+	<div id="results"></div>
+	<ul>
+		<li>Since the prototype of a function is just an object there are multiple ways of copying functionality (such as properties or methods). However only one technique is capable of creating a prototype 'chain': SubFunction.prototype = new SuperFunction();</li>
+		<li>Note Make sure that you don't use the Ninja.prototype = Person.prototype; technique. When doing this any changes to the Ninja prototype will also change the Person prototype (since they're the same object) - which is bound to have undesired side effects.</li>
+	</ul>
+
+
+
+
+	<script>
+		// Instantiation
+		assert(true,"********************************************");
+		assert(true,"*********** Inheritance and Prototype ***********");
+		assert(true,"********************************************");
+		function Person() {}
+		Person.prototype.dance = function(){return 'dance'};
+
+		function Ninja() {}
+
+		assert(true,"Achieve similar, but non-inheritable, results");
+		//Achieve similar, but non-inheritable, results
+		Ninja.prototype = Person.prototype;
+		Ninja.prototype = {dance: Person.prototype.dance};
+
+		assert(true, "Only this mantains the prototype chain");
+		//Only this mantains the prototype chain
+		Ninja.prototype = new Person();
+
+		var ninja = new Ninja();
+		assert(ninja instanceof Ninja, "Ninja recieves functionality from the Ninja prototype");
+		assert(ninja instanceof Person, "Ninja recieves functionality from the Ninja prototype and Person prototype");
+		assert(ninja instanceof Object, "Ninja recieves functionality from the Ninja prototype and the object prototype");
+
+
+
+
+	</script>
+	
+</body>
+</html>
