@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Inheritance and the prototype chain</title>
+	<script src="../js/testSuite.js"></script>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+	<h1>HTML prototypes</h1>
+	<div id="start">Start Divs to be removed</div>
+	<div id="a">I'm going to be removed.</div>
+	<div id="b">Me too</div>
+	<div id="end">End Divs to be removed</div>
+
+	<div id="results"></div>
+	<ul>
+		<li>There's a fun feature in Internet Explorer 8, Firefox, Safari, and Opera which provides base functions representing objects in the DOM. By making these accessible the browser is providing you with the ability to extend any HTML node of your choosing</li>
+		<li>More information about this particular feature can be found in the HTML 5 specification: http://www.whatwg.org/specs/web-apps/current-work/multipage/section-elements.html</li>
+	</ul>
+
+
+
+
+	<script>
+		// Instantiation
+		assert(true,"********************************************");
+		assert(true,"*********** HTML prototypes ***********");
+		assert(true,"********************************************");
+
+		HTMLElement.prototype.remove = function () {
+			if(this.parentNode){
+				this.parentNode.removeChild(this);
+			}
+		}
+		
+		//Old way
+		var a  = document.getElementById('a');
+		a.parentNode.removeChild(a);
+
+		//new Way
+		document.getElementById('b').remove();
+
+
+
+
+
+
+
+	</script>
+	
+</body>
+</html>

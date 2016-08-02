@@ -13,6 +13,16 @@
 		<li>Since the prototype of a function is just an object there are multiple ways of copying functionality (such as properties or methods). However only one technique is capable of creating a prototype 'chain': SubFunction.prototype = new SuperFunction();</li>
 		<li>Note Make sure that you don't use the Ninja.prototype = Person.prototype; technique. When doing this any changes to the Ninja prototype will also change the Person prototype (since they're the same object) - which is bound to have undesired side effects.</li>
 	</ul>
+	<h1>4.1: The order in which properties are bound to an instaciated object</h1>
+	<p>
+		<img src="img1.png" alt="">
+	</p>
+	<h1>implementing new functionality via prototype</h1>
+	<ul>
+		<li>Since all the built-in objects include these prototypes it ends up giving you all the power necessary to extend the language to your desire.</li>
+		<li>An important point to remember when implementing properties or methods on native objects is that introducing them is every bit as dangerous as introducing new variables into the global scope. Since there's only ever one instance of a native object there still significant possibility for naming collisions to occur.</li>
+		<li>When implementing features on native prototypes that are forward-looking (such as the previously- mentioned implementation of Array.prototype.forEach) there's a strong possibility that your implementation won't match the final implementation (causing issues to occur when a browser finally does implement the functionality correctly). You should always take great care when treading in those waters.</li>
+	</ul>
 
 
 
@@ -22,6 +32,7 @@
 		assert(true,"********************************************");
 		assert(true,"*********** Inheritance and Prototype ***********");
 		assert(true,"********************************************");
+		//Listing 4-6: Different ways of copying functionality onto a function's prototype.
 		function Person() {}
 		Person.prototype.dance = function(){return 'dance'};
 
@@ -40,6 +51,23 @@
 		assert(ninja instanceof Ninja, "Ninja recieves functionality from the Ninja prototype");
 		assert(ninja instanceof Person, "Ninja recieves functionality from the Ninja prototype and Person prototype");
 		assert(ninja instanceof Object, "Ninja recieves functionality from the Ninja prototype and the object prototype");
+
+
+		//implementing new functionality via prototype
+		if(true){
+			Array.prototype.forEach = function (fn, thisp) {
+				for (var i = 0; i < this.length; i++) {
+					console.log('call forEach modified, index :'+ i);
+					fn.call( thisp || null, this[i], i, this);
+				}
+			}
+		}
+
+		['a','b','c'].forEach( function(value, index, array){
+			assert(value, 'Is in position ' + index + ' out of '+ (array.length - 1) );
+		} )
+
+
 
 
 
