@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Gotchas</title>
+	<script src="../js/testSuite.js"></script>
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+	<h1>GOTCHAS</h1>
+	<div id="results"></div>
+	<h2>Extending Object</h2>
+	<h2>Extending Numbers</h2>
+	<h2>Sub Classing Native Objects</h2>
+	<h2>Instantiation</h2>
+
+
+
+
+
+	<script>
+		// Instantiation
+		assert(true,"********************************************");
+		assert(true,"*********** Extending Object ***********");
+		assert(true,"********************************************");
+
+		Object.prototype.keys = function () {
+			var keys = [];
+			for (var i in this) {
+				keys.push(i);
+			}
+			return keys;
+		}
+
+		var obj = { a: 1, b:2, c:3};
+		assert( obj.keys().length == 4, "The 3 existing properties plus the new keys method");
+		assert(true,"----********************************************");
+		assert(true,"----*** Extending Object, USE hasOwnProperty *******");
+		assert(true,"----********************************************");
+
+		Object.prototype.keys2 = function () {
+			var keys2 = [];
+			for (var i in this) {
+				if (this.hasOwnProperty(i) ) {
+					keys2.push(i);
+				}
+			}
+			return keys2;
+		}
+		assert( obj.keys2().length == 3, "Only the 3 existing properties are included");
+
+		// Extending Numbers
+		assert(true,"********************************************");
+		assert(true,"*********** Extending Numbers ***********");
+		assert(true,"********************************************");
+
+		Number.prototype.add = function(num){
+			return this + num;
+		}
+
+		var n = 5;
+		assert( n.add(1) == 6, "It works fine if the number is in a variable." );
+		assert( (5).add(1) == 6, "Also work if the number is wrapped in parentheses.");
+		assert(false, ' assert( 5.add(1) == 6 , "Does not work, causes ERROR.");')
+
+		// Sub Class Native Objects
+		assert(true,"********************************************");
+		assert(true,"*********** Sub Class Native Objects ***********");
+		assert(true,"********************************************");
+
+		function MyArray() {
+					
+		}
+		MyArray.prototype = new Array();
+
+		var mine = new MyArray();
+		mine.push(1,2,3);
+		assert(mine.length == 3, "All the items are on sub-classed array.");
+		assert( mine instanceof Array, "Verify that we implemented Array functionality");
+
+		// Simulating Array functionality
+		assert(true,"********************************************");
+		assert(true,"*********** Simulating Array functionality ***********");
+		assert(true,"********************************************");
+
+		function MyArrayFN() {
+				
+		}
+		MyArrayFN.prototype.length = 0;
+
+		( function () {
+			var methods = ['push', 'pop', 'shift', 'unshift', 'slice', 'splice', 'join'];
+
+			for (var i = 0; i < methods.length; i++) ( function (name) {
+				MyArrayFN.prototype[name] = function () {
+					return Array.prototype[name].apply( this, arguments);
+				}
+			})(methods[i]);
+		} )();
+
+		mineFN = new MyArrayFN();
+		mineFN.push(1,2,3);
+		assert( mineFN.length == 3, "All the items are on sub-class array.");
+		assert(!(mineFN instanceof Array), "We aren't sub classing Array, though.");
+
+		// Instantiation
+		assert(true,"********************************************");
+		assert(true,"*********** Instantiation ***********");
+		assert(true,"********************************************");
+		name = 'Resign';
+		function User(first, last) {
+			this.name = first + ' ' + last;
+		}
+		var user = User('John', name);
+		assert( typeof user == 'undefined', "Since new wasnt used, the instance is indefined");
+		assert( name == 'Resign', 'The variable was exposed globally so the integrity of the var was compromised')
+
+		// Enforcing the correct context with arguments.callee and instanceof
+		function UserFix(first, last) {
+			if( !(this instanceof arguments.callee) )
+				return new UserFix(first, last);
+
+			this.name = first + ' ' + last;
+
+		}
+
+		var nameFix = 'Resign';
+		var user = UserFix('John', nameFix);
+
+		assert(user, 'This was defined correctly, even if it was by mistake.')
+		assert(nameFix =='Resign', 'The right name was mantained');
+
+
+		
+
+
+
+
+
+
+
+
+
+
+	</script>
+	
+</body>
+</html>
