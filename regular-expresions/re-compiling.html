@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>RE Compiling</title>
+	<script src="js/testSuite.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<h1>RE Compiling</h1>
+	<div id="results"></div>
+
+
+	<div class="foo ninja">Classes foo and ninja</div>
+	<div class="ninja foo">Classes ninja and foo</div>
+	<div class="foo ninja baz">Classes foo, ninja and baz</div>
+
+	<script>
+		// define re
+		var re 	= /test/i;
+		var re2 = new RegExp('test','i');
+
+		// logs
+		console.log(re.toString());
+		console.log(re2.toString());
+		console.dir(typeof re);
+		console.dir(typeof re2);
+
+		//Test re  
+		assert( re.toString() == "/test/i", "Verify the contents of the expression");
+		assert( re.test( "TesT"), "Make sure the expression work");
+		assert( re2.test("TesT"), "Make sure the expression work");
+		assert( re.toString() == re2.toString(), "The content of the expressions are equal.");
+		assert( re != re2, "But they are differen objects" );
+
+
+		// FIND CLASSES WITH RE
+		function find(className, type) {
+			var elems = document.getElementsByTagName( type || '*');
+			var re = new RegExp('(^|\\s)' + className + '(\\s|$)');
+			// var re = new RegExp("(^|\\s)" + className + "(\\s|$)");
+			var results = [];
+
+			for (var i = 0, length = elems.length; i < length; i++) {
+				if( re.test( elems[i].className ) ){
+					results.push( elems[i] );
+				}
+			}
+			return results;
+		}
+
+		assert( find('ninja', 'div').length == 3, 'Verify the right amount was found');
+		assert( find('ninja').length == 3, 'Verify the right amount was found');
+
+
+	</script>
+	
+</body>
+</html>
